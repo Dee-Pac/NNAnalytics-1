@@ -33,17 +33,11 @@ import org.mapdb.Serializer;
  * calling commit.
  */
 public class CacheManager {
-  
-  private final DB cache = DBMaker
-      .fileDB("/usr/local/nn-analytics/db/nna_cache")
-      .fileMmapEnable()
-      .transactionEnable()
-      .closeOnJvmShutdown()
-      .cleanerHackEnable()
-      .make();
+
+  private DB cache;
 
   public CacheManager() {}
-  
+
   public Map<String, Map<String, Long>> getCachedMapToMap(String mapToMapName) {
     return cache.hashMap(mapToMapName, Serializer.STRING, new MapSerializer()).createOrOpen();
   }
@@ -58,6 +52,20 @@ public class CacheManager {
 
   public void commit() {
     cache.commit();
+  }
+  
+  public void stop() {
+    cache.close();
+  }
+  
+  public void start() {
+    cache = DBMaker
+        .fileDB("/usr/local/nn-analytics/db/nna_cache")
+        .fileMmapEnable()
+        .transactionEnable()
+        .closeOnJvmShutdown()
+        .cleanerHackEnable()
+        .make();
   }
 
 }
