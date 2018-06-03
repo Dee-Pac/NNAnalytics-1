@@ -36,64 +36,9 @@ import org.apache.hadoop.util.GSet;
 import org.apache.hadoop.util.LightWeightGSet;
 import org.slf4j.Logger;
 
-public class GSetGenerator {
+public class GSetGenerator extends GSetGeneratorBase {
 
-  public static final Logger LOG = NNLoader.LOG;
-
-  private static final FsPermission permission = FsPermission.getDefault();
-  private static final PermissionStatus status = PermissionStatus
-      .createImmutable("hdfs", "hdfs", permission);
-  private static final long now = now();
-  private static final SRandom rand = new SRandom();
-
-  private static final INodeDirectory root = new INodeDirectory(0, "/root".getBytes(CHARSET),
-      status, now);
-  private static GSet<INode, INodeWithAdditionalFields> gset;
-
-  private static final int DEFAULT_BLOCK_SIZE = (int) DFSConfigKeys.DFS_BLOCK_SIZE_DEFAULT;
-  private static final int DEFAULT_NUM_FILES = 100;
-  private static final int DEFAULT_NUM_DIRS = 10;
-  private static final short DEFAULT_DEPTH = 3;
-
-  public static int ID = 1;
-  public static int FILES_MADE = 0;
-  public static int DIRS_MADE = 0;
-  public static Function<Void, Integer> TOTAL_MADE = (i -> FILES_MADE + DIRS_MADE);
-
-  public static GSet<INode, INodeWithAdditionalFields> getEmptyGSet() {
-    return new LightWeightGSet<>(LightWeightGSet.computeCapacity(1, "test"));
-  }
-
-  public static GSet<INode, INodeWithAdditionalFields> getGSet() {
-    return getGSet(DEFAULT_DEPTH, DEFAULT_NUM_DIRS, DEFAULT_NUM_FILES);
-  }
-
-  public static void clear() {
-    if (gset != null) {
-      gset.clear();
-      gset = null;
-    }
-    ID = 1;
-    FILES_MADE = 0;
-    DIRS_MADE = 0;
-  }
-
-  public static GSet<INode, INodeWithAdditionalFields> getGSet(short depth, int numDirsPerDepth,
-      int numFilesPerDir) {
-    if (gset == null || gset.size() == 0) {
-      try {
-        gset = getEmptyGSet();
-        gset.put(root);
-        DIRS_MADE++;
-        generateGSet(gset, root, numFilesPerDir, numDirsPerDepth, depth);
-        LOG.info("Generated GSet size is: " + gset.size());
-        assert FILES_MADE + DIRS_MADE == gset.size();
-      } catch (IOException ignored) { /* Defaults not expected to throw Exceptions */ }
-    }
-    return gset;
-  }
-
-  private static void generateGSet(GSet<INode, INodeWithAdditionalFields> newGSet,
+  public void generateGSet(GSet<INode, INodeWithAdditionalFields> newGSet,
       INodeDirectory parent,
       int filesPerDir,
       int numOfDirsPerDepth,
@@ -128,7 +73,7 @@ public class GSetGenerator {
     }
   }
 
-  private static void generateFilesForDirectory(GSet<INode, INodeWithAdditionalFields> newGSet,
+  public void generateFilesForDirectory(GSet<INode, INodeWithAdditionalFields> newGSet,
       INodeDirectory parent,
       int filesToCreate)
       throws IOException {
