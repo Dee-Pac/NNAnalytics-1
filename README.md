@@ -1,4 +1,6 @@
 [![License](http://img.shields.io/:license-Apache%202-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.txt)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8b74b65e31b34a1aac0557a93fabe7d2)](https://www.codacy.com/app/Dee-Pac/NNAnalytics-1?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Dee-Pac/NNAnalytics-1&amp;utm_campaign=Badge_Grade)
+[![Documentation Status](https://readthedocs.org/projects/nnanalytics-1/badge/?version=latest)](http://gimel.readthedocs.io/en/latest/?badge=latest)
 
 # NameNode Analytics
 
